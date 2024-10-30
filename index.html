@@ -63,14 +63,20 @@
     const gamma = event.gamma; // rotação do eixo Y
 
     // Definindo condições para mostrar a imagem
-    if (alpha > 180 && beta > 10 && beta < 30 && gamma > -10 && gamma < 10) {
+    if (alpha > 160 && beta > -10 && beta < 60 && gamma > -30 && gamma < 30) {
       overlay.style.display = 'block';
-      overlay.style.top = '50%';
-      overlay.style.left = '50%';
-      overlay.style.transform = 'translate(-50%, -50%)';
     } else {
       overlay.style.display = 'none';
     }
+
+    // if (alpha > 180 && beta > 10 && beta < 30 && gamma > -10 && gamma < 10) {
+    //   overlay.style.display = 'block';
+    //   overlay.style.top = '50%';
+    //   overlay.style.left = '50%';
+    //   overlay.style.transform = 'translate(-50%, -50%)';
+    // } else {
+    //   overlay.style.display = 'none';
+    // }
   });
 </script>
 
