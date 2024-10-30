@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR Simples</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #000;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+    .overlay {
+      position: absolute;
+      display: none; /* inicialmente invisível */
+      width: 150px;
+      height: 150px;
+      background-image: url('https://66.media.tumblr.com/00451bb1dbf95a0b9f4e80aab6402041/tumblr_o34881b0OG1rhmnmro1_500.gif'); /* sua imagem aqui */
+      background-size: cover;
+    }
+  </style>
+</head>
+<body>
+
+<video id="camera-stream" autoplay playsinline></video>
+<div id="overlay" class="overlay"></div>
+
+<script>
+  // Função para acessar a câmera do dispositivo
+  async function startCamera() {
+    const video = document.getElementById('camera-stream');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      video.srcObject = stream;
+    } catch (error) {
+      console.error("Erro ao acessar a câmera:", error);
+    }
+  }
+
+  // Inicializando a câmera
+  startCamera();
+
+  // Detectando orientação do dispositivo
+  window.addEventListener('deviceorientation', (event) => {
+    const overlay = document.getElementById('overlay');
+    
+    // Você pode usar 'event.alpha', 'event.beta' e 'event.gamma' para ajustar a posição
+    const alpha = event.alpha; // rotação do eixo Z
+    const beta = event.beta;   // rotação do eixo X
+    const gamma = event.gamma; // rotação do eixo Y
+
+    // Definindo condições para mostrar a imagem
+    if (alpha > 180 && beta > 10 && beta < 30 && gamma > -10 && gamma < 10) {
+      overlay.style.display = 'block';
+      overlay.style.top = '50%';
+      overlay.style.left = '50%';
+      overlay.style.transform = 'translate(-50%, -50%)';
+    } else {
+      overlay.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
