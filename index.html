@@ -6,22 +6,22 @@
     <title>Leitor de Código de Barras</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
-        /* Centralizar e estilizar o contêiner do scanner */
+        /* Estilo para centralizar e limitar o tamanho do vídeo */
         #barcode-scanner {
             position: relative;
             width: 100%;
             max-width: 600px;
             margin: auto;
+            overflow: hidden; /* Esconde partes do vídeo que ficam fora do quadrado */
         }
 
-        /* Estilizar o vídeo para ocupar o contêiner */
+        /* Estilo para o vídeo */
         #video {
             width: 100%;
             height: auto;
-            border: 1px solid #ddd;
         }
 
-        /* Mira visual (retângulo central) */
+        /* Mira visual */
         .overlay {
             position: absolute;
             top: 0;
@@ -31,13 +31,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            pointer-events: none; /* Permite interação com o vídeo */
+            pointer-events: none; /* Permite clicar no vídeo */
         }
 
         .guide {
-            border: 3px solid red; /* Cor do retângulo de orientação */
-            width: 80%; /* Largura do retângulo */
-            height: 30%; /* Altura do retângulo */
+            border: 3px solid red; /* Cor da borda da mira */
+            width: 80%; /* Largura da mira */
+            height: 30%; /* Altura da mira */
             box-sizing: border-box;
         }
     </style>
@@ -46,8 +46,8 @@
 
     <h1>Leitor de Código de Barras</h1>
     <div id="barcode-scanner">
-        <video id="video" autoplay playsinline></video> <!-- Configurações para exibir vídeo ao vivo no mobile -->
-        <!-- Retângulo de orientação -->
+        <video id="video" autoplay playsinline></video>
+        <!-- Mira visual sobre o vídeo -->
         <div class="overlay">
             <div class="guide"></div>
         </div>
@@ -59,33 +59,44 @@
 
     <script>
         function startScanner() {
-            Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    target: document.querySelector("#video"), // Elemento onde o vídeo será exibido
-                    constraints: {
-                        facingMode: "environment" // Usa a câmera traseira no celular
+            // Configura a câmera e exibe o vídeo ao vivo
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function(stream) {
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                video.onloadedmetadata = function(e) {
+                    video.play();
+                };
+                
+                // Inicia o Quagga para detectar o código de barras
+                Quagga.init({
+                    inputStream: {
+                        type: "LiveStream",
+                        target: video // Usa o vídeo ao vivo como entrada
+                    },
+                    decoder: {
+                        readers: ["code_128_reader", "ean_reader"] // Tipos de códigos de barras que você deseja detectar
+                    },
+                    locate: true // Localiza automaticamente o código na imagem
+                }, function(err) {
+                    if (err) {
+                        console.error("Erro ao iniciar o Quagga:", err);
+                        return;
                     }
-                },
-                decoder: {
-                    readers: ["code_128_reader", "ean_reader"], // Tipos de códigos de barras que você deseja detectar
-                },
-                locate: true // Habilita a detecção da localização do código na imagem
-            }, function(err) {
-                if (err) {
-                    console.error("Erro ao iniciar o scanner:", err);
-                    return;
-                }
-                console.log("Scanner iniciado");
-                Quagga.start();
-            });
+                    console.log("Scanner iniciado");
+                    Quagga.start();
+                });
 
-            Quagga.onDetected(function(result) {
-                const code = result.codeResult.code;
-                document.getElementById("result").innerText = `Código detectado: ${code}`;
-                console.log("Código detectado:", code);
-                Quagga.stop(); // Opcional: para o scanner após a detecção
+                // Função chamada quando um código de barras é detectado
+                Quagga.onDetected(function(result) {
+                    const code = result.codeResult.code;
+                    document.getElementById("result").innerText = `Código detectado: ${code}`;
+                    console.log("Código detectado:", code);
+                    Quagga.stop(); // Opcional: para o scanner após a detecção
+                });
+            })
+            .catch(function(err) {
+                console.error("Erro ao acessar a câmera:", err);
             });
         }
     </script>
