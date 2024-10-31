@@ -5,12 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leitor de Código de Barras</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        /* Estilos para centralizar e limitar o tamanho do vídeo */
+        #barcode-scanner {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        /* Estilo para o vídeo */
+        #video {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+
+        /* Mira visual */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Permite clicar no vídeo */
+        }
+
+        .guide {
+            border: 3px solid red; /* Cor da borda da mira */
+            width: 80%; /* Largura da mira */
+            height: 30%; /* Altura da mira */
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
 
     <h1>Leitor de Código de Barras</h1>
-    <div id="barcode-scanner" style="width: 100%; max-width: 600px; margin: auto;">
-        <video id="video" autoplay style="width: 100%; height: auto; border: 1px solid #ddd;"></video>
+    <div id="barcode-scanner">
+        <video id="video" autoplay></video>
+        <!-- Mira visual sobre o vídeo -->
+        <div class="overlay">
+            <div class="guide"></div>
+        </div>
     </div>
     <div id="result" style="text-align: center; font-size: 1.2em; margin-top: 20px;"></div>
     <div style="text-align: center; margin-top: 20px;">
@@ -28,6 +68,7 @@
                 decoder: {
                     readers: ["code_128_reader", "ean_reader"], // Tipos de código de barras que você deseja detectar
                 },
+                locate: true, // Habilita a detecção da localização do código na imagem
             }, function(err) {
                 if (err) {
                     console.error("Erro ao iniciar o scanner:", err);
@@ -48,6 +89,7 @@
 
 </body>
 </html>
+
 
 <!-- 
 <!DOCTYPE html>
