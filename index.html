@@ -6,251 +6,360 @@
   <title>Lista de Compras</title>
   <style>
     * {
-  box-sizing: border-box;
-}
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: #f4f4f9;
-}
+    :root {
+      --primary-color: #4CAF50;
+      --primary-dark: #45a049;
+      --danger-color: #e74c3c;
+      --danger-dark: #c0392b;
+      --background-color: #f4f4f9;
+      --card-background: #ffffff;
+      --text-color: #333333;
+      --border-radius: 12px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+    }
 
-.container {
-  width: 300px;
-  padding: 20px;
-  border-radius: 5px;
-  background-color: #ffffff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-.input-section {
-  margin-bottom: 20px;
-}
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--spacing-md);
+    }
 
-.input-section input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-}
+    .card {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
 
-button {
-  padding: 8px 15px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      color: var(--text-color);
+    }
 
-button:hover {
-  background-color: #45a049;
-}
+    .input-group {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+    }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
+    input[type="text"],
+    input[type="number"] {
+      flex: 1;
+      padding: 12px var(--spacing-md);
+      border: 2px solid #e1e1e1;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
 
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 5px 0;
-  padding: 5px;
-  background: #e9e9e9;
-  border-radius: 4px;
-}
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
 
-.price-input {
-  width: 60px;
-  margin-right: 5px;
-}
+    .btn {
+      padding: 12px var(--spacing-md);
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
 
-.delete-btn {
-  padding: 5px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
 
-.delete-btn:hover {
-  background-color: #c0392b;
-}
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
 
-/* Modal da câmera */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
 
-.modal video {
-  width: 300px;
-  height: auto;
-}
+    .btn-danger:hover {
+      background-color: var(--danger-dark);
+    }
 
+    .product-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .product-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: var(--spacing-sm);
+      align-items: center;
+      padding: var(--spacing-md);
+      background-color: #f8f9fa;
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing-sm);
+      transition: transform 0.2s ease;
+    }
+
+    .product-item:hover {
+      transform: translateX(4px);
+    }
+
+    .price-input {
+      width: 100px;
+      padding: 8px;
+      border: 2px solid #e1e1e1;
+      border-radius: var(--border-radius);
+    }
+
+    .total-section {
+      margin-top: var(--spacing-lg);
+      padding: var(--spacing-md);
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: var(--border-radius);
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: var(--card-background);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .modal video {
+      width: 100%;
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--spacing-sm);
+      }
+
+      .product-item {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        gap: var(--spacing-sm);
+      }
+
+      .price-input {
+        width: 80px;
+      }
+
+      .btn {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Lista de Compras</h1>
-    <div class="input-section">
-      <input type="text" id="productInput" placeholder="Nome do Produto" />
-      <button onclick="addProduct()">Adicionar Produto</button>
+    <div class="card">
+      <h1>Lista de Compras</h1>
+      <div class="input-group">
+        <input type="text" id="productInput" placeholder="Nome do Produto" />
+        <button class="btn btn-primary" onclick="addProduct()">Adicionar</button>
+      </div>
+      <ul id="productList" class="product-list"></ul>
+      <div class="total-section">
+        Total da Compra: R$ <span id="totalPrice">0.00</span>
+      </div>
     </div>
-    <ul id="productList"></ul>
-    <div class="total-section">
-      <p>Total da Compra: R$ <span id="totalPrice">0.00</span></p>
-    </div>
-
-    <!-- Modal para câmera -->
-    <div id="cameraModal" class="modal">
-      <video id="camera" autoplay></video>
-      <button onclick="captureImage()">Capturar</button>
-      <button onclick="closeCamera()">Fechar</button>
-    </div>
-
-    <canvas id="canvas" style="display: none;"></canvas>
   </div>
 
-  <!-- Incluindo Tesseract.js para OCR -->
+  <div id="cameraModal" class="modal">
+    <div class="modal-content">
+      <video id="camera" autoplay></video>
+      <div class="modal-buttons">
+        <button class="btn btn-primary" onclick="captureImage()">Capturar</button>
+        <button class="btn btn-danger" onclick="closeCamera()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="canvas" style="display: none;"></canvas>
+
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.1"></script>
   <script>
     let products = JSON.parse(localStorage.getItem("products")) || [];
-let currentProductIndex = null;
-let videoStream;
+    let currentProductIndex = null;
+    let videoStream;
 
-function updateTotalPrice() {
-  const totalPrice = products.reduce((acc, product) => acc + (parseFloat(product.price) || 0), 0);
-  document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
-}
+    function updateTotalPrice() {
+      const totalPrice = products.reduce((acc, product) => acc + (parseFloat(product.price) || 0), 0);
+      document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
+    }
 
-function saveToLocalStorage() {
-  localStorage.setItem("products", JSON.stringify(products));
-}
+    function saveToLocalStorage() {
+      localStorage.setItem("products", JSON.stringify(products));
+    }
 
-function renderProducts() {
-  const productList = document.getElementById("productList");
-  productList.innerHTML = "";
+    function renderProducts() {
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
 
-  products.forEach((product, index) => {
-    const listItem = document.createElement("li");
+      products.forEach((product, index) => {
+        const listItem = document.createElement("li");
+        listItem.className = "product-item";
 
-    listItem.innerHTML = `
-      ${product.name} - R$ <input type="number" class="price-input" value="${product.price || ''}" onchange="updateProductPrice(${index}, this.value)" placeholder="Preço">
-      <button onclick="openCamera(${index})">Leitor de Preço</button>
-      <button class="delete-btn" onclick="deleteProduct(${index})">Deletar</button>
-    `;
-    productList.appendChild(listItem);
-  });
-}
+        listItem.innerHTML = `
+          <span>${product.name}</span>
+          <input type="number" class="price-input" value="${product.price || ''}" 
+                 onchange="updateProductPrice(${index}, this.value)" 
+                 placeholder="R$ 0.00" step="0.01">
+          <button class="btn btn-primary" onclick="openCamera(${index})">📷</button>
+          <button class="btn btn-danger" onclick="deleteProduct(${index})">❌</button>
+        `;
+        productList.appendChild(listItem);
+      });
+    }
 
-function addProduct() {
-  const name = document.getElementById("productInput").value.trim();
-  if (!name) {
-    alert("Por favor, insira o nome do produto.");
-    return;
-  }
+    function addProduct() {
+      const name = document.getElementById("productInput").value.trim();
+      if (!name) {
+        alert("Por favor, insira o nome do produto.");
+        return;
+      }
 
-  products.push({ name, price: 0 });
-  saveToLocalStorage();
-  renderProducts();
-  updateTotalPrice();
+      products.push({ name, price: 0 });
+      saveToLocalStorage();
+      renderProducts();
+      updateTotalPrice();
 
-  document.getElementById("productInput").value = "";
-}
+      document.getElementById("productInput").value = "";
+    }
 
-function updateProductPrice(index, price) {
-  products[index].price = parseFloat(price) || 0;
-  saveToLocalStorage();
-  updateTotalPrice();
-}
+    function updateProductPrice(index, price) {
+      products[index].price = parseFloat(price) || 0;
+      saveToLocalStorage();
+      updateTotalPrice();
+    }
 
-function deleteProduct(index) {
-  products.splice(index, 1);
-  saveToLocalStorage();
-  renderProducts();
-  updateTotalPrice();
-}
-
-function openCamera(index) {
-  currentProductIndex = index;
-  const modal = document.getElementById("cameraModal");
-  modal.style.display = "flex";
-
-  navigator.mediaDevices
-    .getUserMedia({
-      video: { facingMode: { exact: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
-    })
-    .then((stream) => {
-      videoStream = stream;
-      document.getElementById("camera").srcObject = stream;
-    })
-    .catch((error) => {
-      console.error("Erro ao acessar a câmera:", error);
-      alert("Não foi possível acessar a câmera traseira. Verifique se o dispositivo possui uma câmera traseira.");
-      closeCamera();
-    });
-}
-
-function closeCamera() {
-  const modal = document.getElementById("cameraModal");
-  modal.style.display = "none";
-  if (videoStream) {
-    videoStream.getTracks().forEach((track) => track.stop());
-  }
-}
-
-function captureImage() {
-  const video = document.getElementById("camera");
-  const canvas = document.getElementById("canvas");
-  const context = canvas.getContext("2d");
-
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  // Pré-processamento da imagem: conversão para preto e branco
-  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  const data = imageData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-    data[i] = data[i + 1] = data[i + 2] = avg > 128 ? 255 : 0; // Binarização
-  }
-  context.putImageData(imageData, 0, 0);
-
-  // Configurações avançadas do Tesseract para melhorar a leitura de números
-  Tesseract.recognize(canvas, "eng", {
-    tessedit_char_whitelist: "0123456789.", // Limita a leitura a dígitos e pontos
-    oem: 1, // Melhor configuração para dados digitais
-    psm: 7 // Configuração para linhas horizontais de texto
-  }).then(({ data: { text } }) => {
-    const extractedPrice = parseFloat(text.replace(/[^\d.]/g, "")) || 0;
-    if (currentProductIndex !== null) {
-      products[currentProductIndex].price = extractedPrice;
+    function deleteProduct(index) {
+      products.splice(index, 1);
       saveToLocalStorage();
       renderProducts();
       updateTotalPrice();
     }
-    closeCamera();
-  });
-}
 
-// Carregar lista salva ao iniciar
-renderProducts();
-updateTotalPrice();
+    function openCamera(index) {
+      currentProductIndex = index;
+      const modal = document.getElementById("cameraModal");
+      modal.style.display = "flex";
 
+      navigator.mediaDevices
+        .getUserMedia({
+          video: { facingMode: { exact: "environment" } }
+        })
+        .then((stream) => {
+          videoStream = stream;
+          document.getElementById("camera").srcObject = stream;
+        })
+        .catch((error) => {
+          console.error("Erro ao acessar a câmera:", error);
+          alert("Não foi possível acessar a câmera traseira.");
+          closeCamera();
+        });
+    }
+
+    function closeCamera() {
+      const modal = document.getElementById("cameraModal");
+      modal.style.display = "none";
+      if (videoStream) {
+        videoStream.getTracks().forEach((track) => track.stop());
+      }
+    }
+
+    function captureImage() {
+      const video = document.getElementById("camera");
+      const canvas = document.getElementById("canvas");
+      const context = canvas.getContext("2d");
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i] = data[i + 1] = data[i + 2] = avg > 128 ? 255 : 0;
+      }
+      context.putImageData(imageData, 0, 0);
+
+      Tesseract.recognize(canvas, "eng", {
+        tessedit_char_whitelist: "0123456789.",
+        oem: 1,
+        psm: 7
+      }).then(({ data: { text } }) => {
+        const extractedPrice = parseFloat(text.replace(/[^\d.]/g, "")) || 0;
+        if (currentProductIndex !== null) {
+          products[currentProductIndex].price = extractedPrice;
+          saveToLocalStorage();
+          renderProducts();
+          updateTotalPrice();
+        }
+        closeCamera();
+      });
+    }
+
+    renderProducts();
+    updateTotalPrice();
   </script>
 </body>
 </html>
