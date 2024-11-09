@@ -190,16 +190,18 @@ function openCamera(index) {
   modal.style.display = "flex";
 
   navigator.mediaDevices
-    .getUserMedia({ video: true })
+    .getUserMedia({ video: { facingMode: { exact: "environment" } } })
     .then((stream) => {
       videoStream = stream;
       document.getElementById("camera").srcObject = stream;
     })
     .catch((error) => {
       console.error("Erro ao acessar a câmera:", error);
-      alert("Não foi possível acessar a câmera.");
+      alert("Não foi possível acessar a câmera traseira. Verifique se o dispositivo possui uma câmera traseira.");
+      closeCamera();
     });
 }
+
 
 function closeCamera() {
   const modal = document.getElementById("cameraModal");
