@@ -1,6 +1,160 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Compras</title>
+  <!-- <link rel="stylesheet" href="styles.css"> -->
+   <style>
+      * {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f4f4f9;
+}
+
+.container {
+  width: 300px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.input-section {
+  margin-bottom: 20px;
+}
+
+.input-section input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+}
+
+button {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.total-section {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+   </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lista de Compras</h1>
+    <div class="input-section">
+      <input type="text" id="productInput" placeholder="Nome do Produto" />
+      <input type="number" id="priceInput" placeholder="Preço (opcional)" />
+      <input type="file" id="imageInput" accept="image/*" />
+      <button onclick="addProduct()">Adicionar Produto</button>
+    </div>
+    <ul id="productList"></ul>
+    <div class="total-section">
+      <p>Total da Compra: R$ <span id="totalPrice">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- Incluindo Tesseract.js para OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.1"></script>
+  <script>
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+function updateTotalPrice() {
+  const totalPrice = products.reduce((acc, product) => acc + (parseFloat(product.price) || 0), 0);
+  document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem("products", JSON.stringify(products));
+}
+
+function renderProducts() {
+  const productList = document.getElementById("productList");
+  productList.innerHTML = "";
+
+  products.forEach((product, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = `${product.name} - R$ ${parseFloat(product.price).toFixed(2)}`;
+    productList.appendChild(listItem);
+  });
+}
+
+function addProduct() {
+  const name = document.getElementById("productInput").value.trim();
+  const priceInput = document.getElementById("priceInput").value.trim();
+  const price = priceInput ? parseFloat(priceInput) : 0;
+
+  const fileInput = document.getElementById("imageInput");
+  const imageFile = fileInput.files[0];
+
+  if (!name) {
+    alert("Por favor, insira o nome do produto.");
+    return;
+  }
+
+  const product = { name, price };
+
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = async function () {
+      const imageUrl = reader.result;
+      const text = await Tesseract.recognize(imageUrl, "eng");
+      const extractedPrice = parseFloat(text.data.text.replace(/[^\d.]/g, "")) || 0;
+      product.price = extractedPrice || price;
+      products.push(product);
+      saveToLocalStorage();
+      renderProducts();
+      updateTotalPrice();
+    };
+    reader.readAsDataURL(imageFile);
+  } else {
+    products.push(product);
+    saveToLocalStorage();
+    renderProducts();
+    updateTotalPrice();
+  }
+
+  document.getElementById("productInput").value = "";
+  document.getElementById("priceInput").value = "";
+  fileInput.value = null;
+}
+
+// Carregar lista salva ao iniciar
+renderProducts();
+updateTotalPrice();
+
+  </script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leitor de Código de Barras</title>
@@ -102,7 +256,7 @@
     </script>
 
 </body>
-</html>
+</html> -->
 
 
 
